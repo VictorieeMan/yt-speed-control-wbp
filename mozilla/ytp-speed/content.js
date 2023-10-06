@@ -1,3 +1,5 @@
+console.log("Content script running");
+
 function addSpeedControl() {
     let controls = document.querySelector(".ytp-right-controls");
     if (controls && !document.querySelector(".custom-speed-adjuster")) {
