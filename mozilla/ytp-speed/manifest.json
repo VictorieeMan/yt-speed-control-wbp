@@ -10,9 +10,10 @@
         "run_at": "document_end"
       }
     ],
-    "permissions": ["activeTab", "storage"],
-    "background": {
-      "service_worker": "background.js"
-    }
+    "permissions": ["activeTab", "storage"]
+    //,
+    // "background": {
+    //   "service_worker": "background.js"
+    // }
   }
   
