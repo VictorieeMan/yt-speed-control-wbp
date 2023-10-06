@@ -22,46 +22,64 @@ function styleButton(btn) {
         };
 }
 
-// Create the button
+// Create the reset button
+function createResetButton() {
+    let resetBtn = document.createElement("button");
+    resetBtn.className = "ytp-button custom-reset-speed";
+    resetBtn.innerText = "Reset Speed";
+    resetBtn.style.display = 'none'; // Initially hidden, because speed starts at 1x
+    resetBtn.onclick = function() {
+        let video = document.querySelector("video");
+        let speedBtn = document.querySelector(".custom-speed-adjuster");
+        if (video) {
+            video.playbackRate = 1;
+            if (speedBtn) {
+                speedBtn.innerText = "1x";
+            }
+            // Remove the reset button after click
+            resetBtn.remove();
+        }
+    };
+    return resetBtn;
+}
+
+// Create the speed toggle button
 function createSpeedButton() {
     let btn = document.createElement("button");
-
     btn.className = "ytp-button custom-speed-adjuster";
-    btn.innerText = "1.0x";
+    btn.innerText = "1x";
     btn.onclick = function() {
         let video = document.querySelector("video");
+        const controls = document.querySelector(".ytp-right-controls"); // Needed for adding reset button
+        let resetBtn = document.querySelector(".custom-reset-speed");
         if (video) {
             let newSpeed;
             switch (video.playbackRate) {
-                case 1: newSpeed = 1.25; break;
+                case 1:
+                    newSpeed = 1.25;
+                    // Add reset button when speed changes from 1x
+                    if (!resetBtn) {
+                        resetBtn = createResetButton();
+                        styleButton(resetBtn);
+                        controls.insertBefore(resetBtn, controls.firstChild);
+                    }
+                    break;
                 case 1.25: newSpeed = 1.5; break;
                 case 1.5: newSpeed = 1.75; break;
                 case 1.75: newSpeed = 2; break;
-                default: newSpeed = 1; break;
+                default:
+                    newSpeed = 1;
+                    // Remove reset button when speed returns to 1x
+                    if (resetBtn) {
+                        resetBtn.remove();
+                    }
+                    break;
             }
             video.playbackRate = newSpeed;
             btn.innerText = newSpeed + "x";
         }
     };
     return btn;
-}
-
-// Create the reset button
-function createResetButton() {
-    let resetBtn = document.createElement("button");
-    resetBtn.className = "ytp-button custom-reset-speed";
-    resetBtn.innerText = "Reset Speed";
-    resetBtn.onclick = function() {
-        let video = document.querySelector("video");
-        if (video) {
-            video.playbackRate = 1;
-            let speedBtn = document.querySelector(".custom-speed-adjuster");
-            if (speedBtn) {
-                speedBtn.innerText = "1x";
-            }
-        }
-    };
-    return resetBtn;
 }
 
 let speedBtn = createSpeedButton();
@@ -75,9 +93,12 @@ const observer = new MutationObserver(mutations => {
     for (let mutation of mutations) {
         if (mutation.addedNodes.length) {
             const controls = document.querySelector(".ytp-right-controls");
-            if (controls && !document.querySelector(".custom-speed-adjuster")) {
-                controls.insertBefore(speedBtn, controls.firstChild);
-                controls.insertBefore(resetBtn, controls.firstChild);
+            if (controls) {
+                if (!document.querySelector(".custom-speed-adjuster")) {
+                    let speedBtn = createSpeedButton();
+                    styleButton(speedBtn);
+                    controls.insertBefore(speedBtn, controls.firstChild);
+                }
             }
         }
     }
