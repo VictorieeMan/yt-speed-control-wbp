@@ -67,6 +67,14 @@ function createSpeedButton() {
                 case 1.25: newSpeed = 1.5; break;
                 case 1.5: newSpeed = 1.75; break;
                 case 1.75: newSpeed = 2; break;
+                case 2: newSpeed = 3; break;
+                // case 3: newSpeed = 4; break;
+                // case 4: newSpeed = 5; break;
+                // case 5: newSpeed = 6; break;
+                // case 6: newSpeed = 7; break;
+                // case 7: newSpeed = 8; break;
+                // case 8: newSpeed = 9; break; // 9x is max speed for sound.
+                // case 9: newSpeed = 10; break;
                 default:
                     newSpeed = 1;
                     // Remove reset button when speed returns to 1x
