@@ -1,9 +1,7 @@
 console.log("YouTube Playback Speed Adjuster loaded");
 
-// Create the button
-function createSpeedButton() {
-    let btn = document.createElement("button");
-        btn.style.background = 'transparent';
+function styleButton(btn) {
+    btn.style.background = 'transparent';
         btn.style.border = 'none';
         btn.style.color = '#FFF'; // white text color to match other controls
         btn.style.fontSize = '16px'; // adjust as necessary
@@ -12,7 +10,6 @@ function createSpeedButton() {
         btn.style.verticalAlign = 'middle';
         btn.style.margin = '0';
         btn.style.padding = '0';
-        btn.style.display = 'inline-block';
         btn.style.display = 'inline-block';
         btn.style.float = 'left'; // Since we're adding to the beginning of controls, float left might be appropriate.
 
@@ -23,6 +20,11 @@ function createSpeedButton() {
         btn.onmouseout = function() {
             this.style.opacity = '1';
         };
+}
+
+// Create the button
+function createSpeedButton() {
+    let btn = document.createElement("button");
 
     btn.className = "ytp-button custom-speed-adjuster";
     btn.innerText = "1.0x";
@@ -44,13 +46,38 @@ function createSpeedButton() {
     return btn;
 }
 
+// Create the reset button
+function createResetButton() {
+    let resetBtn = document.createElement("button");
+    resetBtn.className = "ytp-button custom-reset-speed";
+    resetBtn.innerText = "Reset Speed";
+    resetBtn.onclick = function() {
+        let video = document.querySelector("video");
+        if (video) {
+            video.playbackRate = 1;
+            let speedBtn = document.querySelector(".custom-speed-adjuster");
+            if (speedBtn) {
+                speedBtn.innerText = "1x";
+            }
+        }
+    };
+    return resetBtn;
+}
+
+let speedBtn = createSpeedButton();
+styleButton(speedBtn);
+
+let resetBtn = createResetButton();
+styleButton(resetBtn);
+
 // Use a MutationObserver to watch for changes in the YouTube player controls
 const observer = new MutationObserver(mutations => {
     for (let mutation of mutations) {
         if (mutation.addedNodes.length) {
             const controls = document.querySelector(".ytp-right-controls");
             if (controls && !document.querySelector(".custom-speed-adjuster")) {
-                controls.insertBefore(createSpeedButton(), controls.firstChild);
+                controls.insertBefore(speedBtn, controls.firstChild);
+                controls.insertBefore(resetBtn, controls.firstChild);
             }
         }
     }
